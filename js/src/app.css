@@ -33,6 +33,10 @@ body {
   padding: 8px;
 }
 
+.sidebar > div {
+  margin-top: 0.5rem;
+}
+
 main {
   display: flex;
   align-items: center;

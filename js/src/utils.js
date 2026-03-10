@@ -1,3 +1,7 @@
+const THETA = Math.atan(Math.sin(Math.PI / 6))
+export const DX = Math.cos(THETA)
+export const DY = Math.sin(THETA)
+
 export function darkenHex(hex, percent) {
   // Remove #
   hex = hex.replace(/^#/, '');

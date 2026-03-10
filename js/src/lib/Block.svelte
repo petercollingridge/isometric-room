@@ -1,11 +1,8 @@
 <script>
-  import { darkenHex } from '../utils';
+  import { darkenHex, DX, DY } from '../utils';
 
   const {x, y, width1, width2, height, fill} = $props();
 
-  const THETA = Math.atan(Math.sin(Math.PI / 6))
-  const DX = Math.cos(THETA)
-  const DY = Math.sin(THETA)
 
   const getTop = () => {
     const dx1 = DX * width1;
@@ -32,7 +29,7 @@
   }
 
   const getStroke = () => {
-    return darkenHex(fill, 0.1);
+    return darkenHex(fill, 0.2);
   }
 
 </script>
