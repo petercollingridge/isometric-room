@@ -1,4 +1,5 @@
 <script>
+  import Sidebar from './lib/Sidebar.svelte';
   import Block from './lib/Block.svelte';
   import Floor from './lib/Floor.svelte';
 
@@ -10,9 +11,9 @@
   let svg;
   let dragging = null;
 
-  let items = $state([
-    { id: 1, x: 100, y: 100, href: "/src/assets/picture_frame.svg" },
-    { id: 2, x: 200, y: 150, href: "/src/assets/picture_frame.svg" }
+  let displayItems = $state([
+    // { id: 1, x: 100, y: 100, scale: 1, href: "/src/assets/picture_frame.svg" },
+    // { id: 2, x: 200, y: 150, scale: 1, href: "/src/assets/picture_frame.svg" }
   ]);
 
   function getSvgPoint(event) {
@@ -34,8 +35,9 @@
     const pt = getSvgPoint(event);
     dragging.item.x = pt.x - dragging.offsetY;
     dragging.item.y = pt.y - dragging.offsetY;
+    // dragging.item.scale = dragging.item.x > canvasWidth / 2 ? -1 : 1;
 
-    items = items;
+    displayItems = displayItems;
   }
 
   function endDrag() {
@@ -45,20 +47,7 @@
 </script>
 
 <div class=container>
-  <div class="sidebar">
-  <div>
-    <label>
-      Floor:
-      <input type="color" bind:value={floorColour}>
-    </label>
-    </div>
-    <div>
-    <label>
-      Floorboard width:
-      <input type="range" bind:value={floorBoardWidth} min={8} max={40}>
-    </label>
-    </div>
-  </div>
+  <Sidebar bind:displayItems bind:floorColour bind:floorBoardWidth />
 
   <main>
     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -75,13 +64,13 @@
       <Floor x={canvasWidth / 2} y={300 + 10} width1={300} width2={300} height={5} fill={floorColour} floorBoardWidth={floorBoardWidth}/>
 
       <!-- Draggable objects -->
-      {#each items as item (item.id)}
+      {#each displayItems as item (item.id)}
         <g
-          transform={`translate(${item.x},${item.y})`}
+          transform={`translate(${item.x - item.width / 2},${item.y - item.height / 2})`}
           onpointerdown={(e) => startDrag(e, item)}
           style="cursor:grab"
         >
-          <image href={item.href} width="50" height="50" />
+          <image href={item.href} width={item.width} height={item.height} />
         </g>
       {/each}
     </svg>

@@ -71,13 +71,12 @@ def drawPicture():
     box_height = 50
     d = 4
 
-    svg_width = box_width * DX + 4
-    svg_height = box_width * DY + box_height + 4
-    view_box = f'-{svg_width / 2} -{svg_height / 2} {svg_width} {svg_height}'
-    svg = SVG({'width': svg_width, 'height': svg_height, 'viewBox': view_box})
+    svg_width = math.ceil(box_width * DX + 4)
+    svg_height = math.ceil(box_width * DY + box_height + 4)
+    svg = SVG({'width': svg_width, 'height': svg_height})
 
-    x = box_width * DX - svg_width / 2
-    y = 2 - svg_height / 2
+    x = box_width * DX + 2
+    y = 2
     draw_wall(svg, x, y, box_width, box_height, 0, {'fill': 'rgb(234, 169, 83)'})
     draw_wall(svg, x - d * DX, y + d * DY + d, box_width - d * 2, box_height - d * 2, 0, {'fill': 'white'})
     svg.write("picture.svg")
