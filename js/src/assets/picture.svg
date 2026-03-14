@@ -1,0 +1,13 @@
+<svg width="121" height="260" xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(3)">
+    <path d="M34 2v25l-31.3 15.65v-25z" fill="#a64"/>
+    </g>
+    <g transform="translate(12 12) scale(1 0.5) matrix(0.707 -0.707 0 0.707 0.707 88)">
+        <image
+            href="Mona_Lisa.jpg"
+            width="121"
+            height="180"
+            preserveAspectRatio="xMidYMid slice"
+        />
+    </g>
+</svg>

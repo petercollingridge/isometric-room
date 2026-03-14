@@ -3,7 +3,6 @@
 
   const {x, y, width1, width2, height, fill} = $props();
 
-
   const getTop = () => {
     const dx1 = DX * width1;
     const dy1 = DY * width1;
@@ -28,14 +27,14 @@
     return `M${x1},${y1}v${height}l${dx},${dy}v${-height}z`;
   }
 
-  const getStroke = () => {
-    return darkenHex(fill, 0.2);
+  const getStroke = (percentage) => {
+    return darkenHex(fill, percentage);
   }
 
 </script>
 
 <g>
-  <path d={getTop()} fill={fill} stroke={getStroke()}/>
-  <path d={getLeftSide()} fill={fill} stroke={getStroke()}/>
-  <path d={getRightSide()} fill={fill} stroke={getStroke()}/>
+  <path d={getTop()} fill={fill} stroke={getStroke(0.2)}/>
+  <path d={getLeftSide()} fill={getStroke(0.05)} stroke={getStroke(0.2)}/>
+  <path d={getRightSide()} fill={getStroke(0.1)} stroke={getStroke(0.2)}/>
 </g>

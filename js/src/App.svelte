@@ -27,7 +27,7 @@
     <svg class="canvas" width={`${canvasWidth}px`} height={`${canvasHeight}px`}>
       <Block x={canvasWidth / 2 - 9} y={20} width1={300} width2={10} height={300} fill="#eeeebb"/>
       <Block x={canvasWidth / 2 + 9} y={20} width1={10} width2={300} height={300} fill="#ffffdd"/>
-      <Floor x={canvasWidth / 2} y={300 + 15} width1={300} width2={300} height={5} fill={floorColour} floorBoardWidth={floorBoardWidth}/>
+      <Floor x={canvasWidth / 2} y={300 + 10} width1={300} width2={300} height={5} fill={floorColour} floorBoardWidth={floorBoardWidth}/>
     </svg>
   </main>
 </div>

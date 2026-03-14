@@ -10,19 +10,19 @@
   const positions = $derived.by(() => {
     const nBoards = 48 - floorBoardWidth;
     const boardWidth = width1 / nBoards;
-    const out = [];
+    const plank = [];
     for (let i = 1; i < nBoards; i++) {
-      out.push([x - dx * i * boardWidth, y - 2 + dy * i * boardWidth]);
+      plank.push([x - dx * i * boardWidth, y - 4 + dy * i * boardWidth]);
     }
-    return out;
+    return plank;
   });
 
 </script>
 
 <g>
-  <Block x={x} y={y} width1={width1} width2={width2} height={10} fill="#ddd"/>
-  <Block x={x} y={y - 2} width1={width1} width2={width2} height={height} fill={fill}/>
-  {#each positions as [px, py], i (i)}
+  <Block x={x} y={y} width1={width1} width2={width2} height={15} fill="#d8d8d8"/>
+  <Block x={x} y={y - 4} width1={width1} width2={width2} height={height} fill={fill}/>
+  {#each positions as [px, py]}
     <path d={`M${px},${py}l${dx * width2},${dy * width2}v${height}`} stroke={darkenHex(fill, 0.2)} stroke-width="1" fill="none"/>
   {/each}
 </g>
