@@ -17,6 +17,26 @@ def draw_wall(svg, x, y, width, height, direction = None, attrs = None):
     svg.add('path', attrs)
 
 
+def draw_wall_outline(svg, x, y, width, height, thickness, direction = None, attrs = None):
+    """ Draw a vertical wall rectangle with a cut-out in isometric view """
+    if not attrs:
+        attrs = {}
+
+    dx = width * DX if direction % 2 else width * -DX
+    dy = width * DY if direction < 2 else width * -DY
+    d = f"M{x} {y}v{height}l{dx} {dy}v{-height}z"
+
+    x -= thickness * DX
+    y += thickness * DY + thickness
+    dx += thickness * 2 * DX
+    dy -= thickness * 2 * DY
+    height -= thickness * 2
+    d += f"M{x} {y}l{dx} {dy}v{height}l{-dx} {-dy}z"
+
+    attrs['d'] = d
+    svg.add('path', attrs)
+
+
 def draw_floor(svg, x, y, width, height, attrs = None):
     """ Draw a horizontal (floor) rectangle in isometric view """
     if not attrs:
@@ -66,19 +86,54 @@ def draw_background(svg, width, height):
     draw_wall(svg, width * 0.5,floor_y, wall_width, 8, 4, {'class': 'floor'})
 
 
-def drawPicture():
-    box_width = 35
-    box_height = 50
-    d = 4
+def draw_frame():
+    frame_width = 35
+    frame_height = 50
+    frame_thick = 2
+    frame_border = 5
 
-    svg_width = math.ceil(box_width * DX + 4)
-    svg_height = math.ceil(box_width * DY + box_height + 4)
-    svg = SVG({'width': svg_width, 'height': svg_height})
+    img_border = 2
+    svg_width = math.ceil((frame_width + frame_thick) * DX + img_border * 2)
+    svg_height = math.ceil(frame_width * DY + frame_height + img_border * 2)
+    view_box = f"0 0 {svg_width} {svg_height}"
+    # svg = SVG({'width': svg_width, 'height': svg_height})
+    svg = SVG({'viewBox': view_box})
 
-    x = box_width * DX + 2
-    y = 2
-    draw_wall(svg, x, y, box_width, box_height, 0, {'fill': 'rgb(234, 169, 83)'})
-    draw_wall(svg, x - d * DX, y + d * DY + d, box_width - d * 2, box_height - d * 2, 0, {'fill': 'white'})
+    svg.rect(0, 0, svg_width, svg_height, fill='#f8f8f8')
+
+    # Start at top right corner, giving a 2px border
+    x = frame_width * DX + img_border
+    y = img_border
+
+    top_colour = 'rgb(248, 190, 105)'
+    front_colour = 'rgb(234, 169, 83)'
+    side_colour = 'rgb(220, 155, 60)'
+
+    # Backing / img
+    draw_wall(svg, x, y, frame_width, frame_height, 0, {'fill': '#e8e8ff'})
+
+    # Upper edge
+    draw_floor(svg, x, y, frame_thick, frame_width, {'fill': top_colour})
+
+    # Lower, inner edge
+    draw_floor(svg, x, y + frame_height - frame_border, frame_thick, frame_width, {'fill': top_colour})
+
+    # Front face
+    front_x = x + DX * frame_thick
+    front_y = y + DY * frame_thick
+
+    # Left edge
+    x1 = front_x - frame_width * DX
+    y1 = front_y + frame_width * DY
+    draw_wall(svg, x1, y1, frame_thick, frame_height, 2, {'fill': side_colour})
+
+   # Inner right edge
+    x2 = front_x - frame_border * DX
+    y2 = front_y + frame_border * DY + frame_border
+    draw_wall(svg, x2, y2, frame_thick, frame_height - frame_border * 2, 2, {'fill': side_colour})
+
+    draw_wall_outline(svg, front_x, front_y, frame_width, frame_height, frame_border, 0, {'fill': front_colour})
+
     svg.write("picture.svg")
 
 
@@ -97,4 +152,4 @@ def main():
 
 if __name__ == '__main__':
     # main()
-    drawPicture()
+    draw_frame()
