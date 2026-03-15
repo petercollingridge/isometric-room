@@ -4,20 +4,19 @@
   let {
     displayItems = $bindable(),
     floorColour = $bindable(),
-    floorBoardWidth = $bindable()
+    floorBoardWidth = $bindable(),
+    selected = $bindable(),
   } = $props();
 
   function addItem(item) {
-    console.log(item);
-    displayItems.push({
-      id: displayItems.length,
-      x: 200,
-      y: 300,
-      width: item.width,
-      height: item.height,
-      scale: 1,
-      href: `/src/assets/${item.img}.svg`,
-    });
+    const itemData = {...item};
+    itemData.id = displayItems.length;
+    itemData.x = 200;
+    itemData.y = 200;
+    itemData.scale = 1;
+    itemData.href = `/src/assets/${item.img}.svg`;
+
+    displayItems.push(itemData);
   }
 </script>
 
@@ -37,6 +36,24 @@
       </label>
     </div>
   </section>
+
+  {#if selected}
+    <section>
+      <h3>Selected item</h3>
+      <div>{selected.item.name}</div>
+      <div>
+        <label>
+          x:
+          <input class="coord-input" type="number" bind:value={selected.item.x}>
+        </label>
+        <label>
+          y:
+          <input class="coord-input" type="number" bind:value={selected.item.y}>
+        </label>
+      </div>
+    </section>
+  {/if}
+
   <section>
     <h3>Items</h3>
       {#each allItems as item (item.name)}
@@ -69,5 +86,10 @@
     width: fit-content;
     border: 1px solid #ddd;
     margin: auto;
+  }
+
+  .coord-input {
+    width: 100px;
+    margin-right: 10px;
   }
 </style>

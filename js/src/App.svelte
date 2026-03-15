@@ -7,14 +7,11 @@
   const canvasHeight = 600;
   let floorColour = $state('#dfaa38');
   let floorBoardWidth = $state(10);
+  let selected = $state(null);
 
   let svg;
-  let dragging = null;
-
-  let displayItems = $state([
-    // { id: 1, x: 100, y: 100, scale: 1, href: "/src/assets/picture_frame.svg" },
-    // { id: 2, x: 200, y: 150, scale: 1, href: "/src/assets/picture_frame.svg" }
-  ]);
+  let dragging = false;
+  let displayItems = $state([]);
 
   function getSvgPoint(event) {
     const pt = svg.createSVGPoint();
@@ -23,31 +20,31 @@
     return pt.matrixTransform(svg.getScreenCTM().inverse());
   }
 
-  function startDrag(event, item) {
+  function selectItem(event, item) {
     event.stopPropagation();
+    dragging = true;
     const pt = getSvgPoint(event);
-    dragging = { item, offsetX: pt.x - item.x, offsetY: pt.y - item.y };
+    selected = { item, offsetX: pt.x - item.x, offsetY: pt.y - item.y };
   }
 
   function drag(event) {
     if (!dragging) return;
 
     const pt = getSvgPoint(event);
-    dragging.item.x = pt.x - dragging.offsetY;
-    dragging.item.y = pt.y - dragging.offsetY;
-    // dragging.item.scale = dragging.item.x > canvasWidth / 2 ? -1 : 1;
+    selected.item.x = Math.round(10 * (pt.x - selected.offsetY)) / 10;
+    selected.item.y = Math.round(10 * (pt.y - selected.offsetY)) / 10;
 
     displayItems = displayItems;
   }
 
   function endDrag() {
-    dragging = null;
+    dragging = false;
   }
 
 </script>
 
 <div class=container>
-  <Sidebar bind:displayItems bind:floorColour bind:floorBoardWidth />
+  <Sidebar bind:displayItems bind:floorColour bind:floorBoardWidth bind:selected />
 
   <main>
     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -67,7 +64,7 @@
       {#each displayItems as item (item.id)}
         <g
           transform={`translate(${item.x - item.width / 2},${item.y - item.height / 2})`}
-          onpointerdown={(e) => startDrag(e, item)}
+          onpointerdown={(e) => selectItem(e, item)}
           style="cursor:grab"
         >
           <image href={item.href} width={item.width} height={item.height} />
