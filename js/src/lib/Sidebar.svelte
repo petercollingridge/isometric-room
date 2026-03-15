@@ -13,7 +13,7 @@
     itemData.id = displayItems.length;
     itemData.x = 200;
     itemData.y = 200;
-    itemData.scale = 1;
+    itemData.flip = false;
     itemData.href = `/src/assets/${item.img}.svg`;
 
     displayItems.push(itemData);
@@ -49,6 +49,12 @@
         <label>
           y:
           <input class="coord-input" type="number" bind:value={selected.item.y}>
+        </label>
+      </div>
+      <div>
+        <label>
+          Flip:
+          <input type="checkbox" bind:checked={selected.item.flip}>
         </label>
       </div>
     </section>

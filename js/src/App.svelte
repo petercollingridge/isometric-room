@@ -2,6 +2,7 @@
   import Sidebar from './lib/Sidebar.svelte';
   import Block from './lib/Block.svelte';
   import Floor from './lib/Floor.svelte';
+  import { allItems } from './assets/items';
 
   const canvasWidth = 600;
   const canvasHeight = 600;
@@ -33,12 +34,29 @@
     const pt = getSvgPoint(event);
     selected.item.x = Math.round(10 * (pt.x - selected.offsetY)) / 10;
     selected.item.y = Math.round(10 * (pt.y - selected.offsetY)) / 10;
-
     displayItems = displayItems;
+  }
+
+  function getTransform(item) {
+    const w = item.width / 2;
+    const h = item.height / 2;
+
+    if (!item.flip) {
+      return `translate(${item.x - w},${item.y - h})`;
+    }
+
+    let transform = `translate(${item.x},${item.y})`;
+    transform += ' scale(-1, 1)';
+    transform += ` translate(${-w},${-h})`;
+    return transform;
   }
 
   function endDrag() {
     dragging = false;
+  }
+
+  function endSelect() {
+    selected = null;
   }
 
 </script>
@@ -54,16 +72,19 @@
       width={`${canvasWidth}px`}
       height={`${canvasHeight}px`}
       onpointermove={drag}
-      onpointerup={endDrag}  
+      onpointerup={endDrag}
     >
       <Block x={canvasWidth / 2 - 9} y={20} width1={300} width2={10} height={300} fill="#eeeebb"/>
       <Block x={canvasWidth / 2 + 9} y={20} width1={10} width2={300} height={300} fill="#ffffdd"/>
       <Floor x={canvasWidth / 2} y={300 + 10} width1={300} width2={300} height={5} fill={floorColour} floorBoardWidth={floorBoardWidth}/>
 
+      <!-- Rect to capture clicks off items to trigger deselect -->
+      <rect x="0" y="0" width={canvasWidth} height={canvasHeight} fill-opacity="0" onpointerup={endSelect} />
+
       <!-- Draggable objects -->
       {#each displayItems as item (item.id)}
         <g
-          transform={`translate(${item.x - item.width / 2},${item.y - item.height / 2})`}
+          transform={getTransform(item)}
           onpointerdown={(e) => selectItem(e, item)}
           style="cursor:grab"
         >
